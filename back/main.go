@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/iamcaye/time-spent/routes"
+	"github.com/iamcaye/time-spent/api"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ func main() {
 		})
 	})
 
-	routes.SetupRouter(r)
+	api.SetupRouter(r)
 
 	err := r.Run(":8080")
 	if err != nil {
