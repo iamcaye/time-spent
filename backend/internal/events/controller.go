@@ -25,14 +25,32 @@ func (ctl *EventController) GetEventByID(c *gin.Context) {
 }
 
 func (ctl *EventController) CreateEvent(c *gin.Context) {
+	event := Event{}
+	err := c.BindJSON(&event)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"data": ctl.service.CreateEvent(Event{}),
+		"data": ctl.service.CreateEvent(event),
 	})
 }
 
 func (ctl *EventController) UpdateEvent(c *gin.Context) {
+	event := Event{}
+	err := c.BindJSON(&event)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"data": ctl.service.UpdateEvent(Event{}),
+		"data": ctl.service.UpdateEvent(event),
 	})
 }
 

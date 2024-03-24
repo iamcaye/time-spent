@@ -1,3 +1,8 @@
 **/tmp/**
 **/node_modules/**
 **/gin-bin
+**/gin-bin/**
+**/.env
+
+db
+db-data

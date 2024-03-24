@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  time-spent-db:
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db-data:/var/lib/mysql
+      # - ./db-init:/docker-entrypoint-initdb.d

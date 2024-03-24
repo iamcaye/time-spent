@@ -1,46 +1,72 @@
 package events
 
-type Event struct {
-	ID          int
-	Name        string
-	Description string
-	Date        string
+import (
+	"fmt"
+	"github.com/jmoiron/sqlx"
+)
+
+type EventService struct {
+	db *sqlx.DB
 }
 
-type EventService struct{}
-
-func (eventService *EventService) GetEvents() []Event {
-	// This function will return a list of events
-	// For now, it will return a list of hardcoded events
-	events := []Event{
-		{ID: 1, Name: "Event 1", Description: "The first event", Date: "01/01/2021"},
-		{ID: 2, Name: "Event 2", Description: "The second event", Date: "02/01/2021"},
-		{ID: 3, Name: "Event 3", Description: "The third event", Date: "03/01/2021"},
+func (srv *EventService) GetEvents() []Event {
+	events := []Event{}
+	err := srv.db.Select(&events, "SELECT * FROM events")
+	if err != nil {
+		panic(err)
 	}
+
 	return events
 }
 
-func (eventService *EventService) GetEventByID(id int) Event {
+func (srv *EventService) GetEventByID(id int) Event {
 	// This function will return an event by ID
 	// For now, it will return a hardcoded event
-	event := Event{ID: 1, Name: "Event 1", Description: "The first event", Date: "01/01/2021"}
+	event := Event{}
+	err := srv.db.Get(&event, "SELECT * FROM events WHERE id = ?", id)
+	if err != nil {
+		panic(err)
+	}
+
 	return event
 }
 
 func (eventService *EventService) CreateEvent(event Event) Event {
 	// This function will create a new event
-	// For now, it will return the event that was created
+	err := eventService.db.Get(&event,
+		"INSERT INTO events (name, id_user, id_category) VALUES (?, ?, ?) RETURNING *",
+		event.Name, event.IdUser, event.IdCategory)
+
+	if err != nil {
+		panic(err)
+	}
+
 	return event
 }
 
-func (eventService *EventService) UpdateEvent(event Event) Event {
+func (eventService *EventService) UpdateEvent(event Event) bool {
 	// This function will update an existing event
-	// For now, it will return the event that was updated
-	return event
+	fmt.Println(event)
+	res, err := eventService.db.Exec(
+		"UPDATE events SET name = ?, id_user = ?, id_category = ? WHERE id = ?",
+		event.Name, event.IdUser, event.IdCategory, event.ID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	n, _ := res.RowsAffected()
+	fmt.Println(n)
+	return n > 0
 }
 
 func (eventService *EventService) DeleteEvent(id int) bool {
-	// This function will delete an event by ID
-	// For now, it will do nothing
-	return true
+	// This function will delete an existing event
+	res, err := eventService.db.Exec("DELETE FROM events WHERE id = ?", id)
+	if err != nil {
+		panic(err)
+	}
+
+	n, _ := res.RowsAffected()
+	return n > 0
 }
