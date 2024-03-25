@@ -25,4 +25,7 @@ func (router *EventRouter) SetupRouter(r *gin.RouterGroup) {
 	r.POST("", router.ctl.CreateEvent)
 	r.PUT(":id", router.ctl.UpdateEvent)
 	r.DELETE(":id", router.ctl.DeleteEvent)
+
+	r.GET(":id/start", router.ctl.StartEvent)
+	r.GET(":id/stop", router.ctl.StopEvent)
 }

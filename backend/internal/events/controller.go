@@ -61,3 +61,19 @@ func (ctl *EventController) DeleteEvent(c *gin.Context) {
 		"data": ctl.service.DeleteEvent(id),
 	})
 }
+
+func (ctl *EventController) StartEvent(c *gin.Context) {
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	c.JSON(200, gin.H{
+		"data": ctl.service.StartEvent(id),
+	})
+}
+
+func (ctl *EventController) StopEvent(c *gin.Context) {
+	idStr := c.Param("id")
+	id, _ := strconv.Atoi(idStr)
+	c.JSON(200, gin.H{
+		"data": ctl.service.StopEvent(id),
+	})
+}

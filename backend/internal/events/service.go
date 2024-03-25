@@ -70,3 +70,24 @@ func (eventService *EventService) DeleteEvent(id int) bool {
 	n, _ := res.RowsAffected()
 	return n > 0
 }
+
+func (srv *EventService) StartEvent(id int) bool {
+	// This function will start an event
+	res, err := srv.db.Exec("INSERT INTO events_timestamps (id_event) VALUES (?)", id)
+	if err != nil {
+		panic(err)
+	}
+
+	n, _ := res.RowsAffected()
+	return n > 0
+}
+
+func (srv *EventService) StopEvent(id int) bool {
+	res, err := srv.db.Exec("UPDATE events_timestamps SET end_time = NOW() WHERE id_event = ? AND end_time IS NULL", id)
+	if err != nil {
+		panic(err)
+	}
+
+	n, _ := res.RowsAffected()
+	return n > 0
+}
