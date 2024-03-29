@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/iamcaye/time-spent/internal/routes"
 	"github.com/joho/godotenv"
 	"os"
+	"time"
 )
 
 func main() {
 	fmt.Println("Starting the application...")
+	start_time := time.Now()
 	r := gin.Default()
 
 	err := godotenv.Load()
@@ -23,9 +24,14 @@ func main() {
 
 	routes.SetupRouter(r)
 
-	r.SetTrustedProxies([]string{"127.0.0.1"})
+	err = r.SetTrustedProxies([]string{"127.0.0.1"})
+	if err != nil {
+		fmt.Println("An error occurred while setting trusted proxies")
+	}
 
 	port := os.Getenv("PORT")
+	elapsed := time.Since(start_time)
+	fmt.Println("[TIME] Start the application: ", elapsed)
 	error := r.Run(fmt.Sprintf(":%s", port))
 	if error != nil {
 		fmt.Println("An error occurred while starting the application")

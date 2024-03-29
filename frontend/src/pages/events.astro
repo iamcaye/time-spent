@@ -1,18 +1,18 @@
 ---
-import Table from "../components/Table.astro";
-
+import { Table } from "../components/Table";
+import type { IColumn } from "../models/IColumn";
 const rows = await fetch("http://localhost:8080/api/events")
 	.then((res) => res.json())
 	.then((data) => data.data);
 
-const cols = [
-	{ name: "Name", key: "Name" },
-	{ name: "Date", key: "CreatedAt" },
+const cols: IColumn[] = [
+	{ header: "Name", field: "Name", type: "text" },
+	{ header: "Date", field: "CreatedAt", type: "date" },
 ];
-console.log(rows);
 ---
 
 <h1>Events</h1>
-<div class="m-5">
-	<Table cols={cols} rows={rows} />
+<div class="m-5 w-6/12">
+	<Table client:load data={rows} columns={cols} paginator={true} />
 </div>
+<div class="m-5"></div>
